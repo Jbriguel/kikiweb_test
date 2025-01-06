@@ -13,6 +13,7 @@ export default defineConfig({
     vueDevTools(),
   ],
   // base: import.meta.env.VITE_APP_BASE_PATH,
+  base: /kikiweb_test/,
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
