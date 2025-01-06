@@ -1,18 +1,34 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: [push]
+name: Deploy Vue.js App to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # Déclenche le workflow lorsqu'un push est fait sur la branche principale
+
 jobs:
-  Explore-GitHub-Actions:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
-        uses: actions/checkout@v4
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+    # Étape 1 : Récupérer le code source
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # Étape 2 : Installer Node.js
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16' # Version compatible avec Vue.js
+
+    # Étape 3 : Installer les dépendances et construire le projet
+    - name: Install dependencies and build
+      run: |
+        npm install # Installer les dépendances
+        npm run build # Construire le projet (génère le dossier 'dist')
+
+    # Étape 4 : Déployer sur GitHub Pages
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./dist # Dossier de sortie généré par Vue.js
