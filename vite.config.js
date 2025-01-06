@@ -12,7 +12,7 @@ export default defineConfig({
     vueJsx(),
     vueDevTools(),
   ],
-  base: '/kikiweb_test/'
+  base: '/kikiweb_test/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
