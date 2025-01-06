@@ -12,10 +12,11 @@ export default defineConfig({
     vueJsx(),
     vueDevTools(),
   ],
-  base: '/kikiweb_test/',
+  // base: import.meta.env.VITE_APP_BASE_PATH,
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  assetsInclude: ['**/*.png', '**/*.jpg', '**/*.svg'],
 })
