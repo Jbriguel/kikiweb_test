@@ -18,7 +18,8 @@ export default {
   },
   data() {
     return {
-      bg_img1: import.meta.glob('@/assets/images/person_1.jpg')
+      bg_img1: import.meta.glob('@/assets/images/person_1.jpg'),
+      url: import.meta.env.VITE_APP_BASE_PATH,
     };
   }
 };
@@ -27,7 +28,7 @@ export default {
 
 <template>
   <Section>
-
+<p>{{url}}</p>
     <HeroSection backgroundImage="/assets/images/bg_1.jpg" title="Beauty Salon" logoText="Kiki Secret"
       buttonText="View Our Services" creatorLink="#" creatorName="Colorlib.com" />
 
