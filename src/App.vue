@@ -14,7 +14,9 @@ import { /*RouterLink,*/ RouterView } from 'vue-router'
         <RouterLink to="/about">About</RouterLink>
       </nav>
     </div>
-  </header> -->
+  </header> 
+  
+  ff-->
 
   <RouterView />
 </template>
