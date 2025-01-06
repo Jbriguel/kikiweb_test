@@ -18,7 +18,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '16' # Version compatible avec Vue.js
+        node-version: '20.12.2' # Version compatible avec Vue.js
 
     # Étape 3 : Installer les dépendances et construire le projet
     - name: Install dependencies and build
