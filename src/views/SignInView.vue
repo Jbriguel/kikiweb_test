@@ -6,9 +6,9 @@
             <div class="uf-form-signin">
 
                 <div class="text-center">
-                    <a href="https://uifresh.net/"><img src="./assets/img/logo-fb.png" alt="" width="100"
+                    <a href=""><img src="./assets/img/logo-fb.png" alt="" width="100"
                             height="100"></a>
-                    <h1 class="text-white h3">Account Login</h1>
+                    <h1 class="text-white h3">Sign in Account</h1>
                 </div>
                 <form class="mt-4">
                     <div class="input-group uf-input-group input-group-lg mb-3">
@@ -29,11 +29,11 @@
                         <a href="#">Forgot password?</a>
                     </div>
                     <div class="d-grid mb-4">
-                        <button type="submit" class="btn uf-btn-primary btn-lg">Login</button>
+                        <button type="submit" class="btn uf-btn-primary btn-lg">Register</button>
                     </div>
                     <div class="d-flex mb-3">
                         <div class="dropdown-divider m-auto w-25"></div>
-                        <small class="text-nowrap text-white">Or login with</small>
+                        <small class="text-nowrap text-white">Or Sign In with</small>
                         <div class="dropdown-divider m-auto w-25"></div>
                     </div>
                     <div class="uf-social-login d-flex justify-content-center"> 
@@ -42,7 +42,7 @@
                     </div>
                     <div class="mt-4 text-center">
                         <span class="text-white">Don't have an account?</span>
-                        <a href="/register">Sign Up</a>
+                        <a href="/login"> Sign Up </a>
                     </div>
                 </form>
             </div>

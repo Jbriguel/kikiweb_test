@@ -28,7 +28,7 @@ export default {
 
 <template>
   <Section>
-<p>{{url}}</p>
+<!-- <p>{{url}}</p> -->
     <HeroSection backgroundImage="/assets/images/bg_1.jpg" title="Beauty Salon" logoText="Kiki Secret"
       buttonText="View Our Services" creatorLink="#" creatorName="Colorlib.com" />
 
