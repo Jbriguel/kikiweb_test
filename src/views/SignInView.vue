@@ -1,84 +1,141 @@
 <template>
-    <Section class="login_section">
-        <div class="hero-wrap js-fullheight" :style="{ backgroundImage: `url('../assets/images/bg_1.jpg')` }">
-            <!-- :style="{ backgroundImage: `url(${backgroundImage})` }" -->
-            <div class="overlay login_section"></div>
-            <div class="uf-form-signin">
+    <Section class="auth_section">
+        <div class="hero-wrap js-fullheight" :style="{ backgroundImage: `url('../assets/images/back_07.jpg')` }">
+            <div class="overlay_auth"></div>
 
+            <div class="uf-form-auth m-8 ">
                 <div class="text-center">
-                    <a href=""><img src="./assets/img/logo-fb.png" alt="" width="100"
+                    <a href="https://uifresh.net/"><img src="@/assets/images/logo/kiki_logo-2.png" alt="" width="100"
                             height="100"></a>
-                    <h1 class="text-white h3">Sign in Account</h1>
+                    <h1 class="text-white h3">{{ isSignUp ? 'Create Account' : 'Account Login' }}</h1>
                 </div>
                 <form class="mt-4">
+                    <!-- <div v-if="isSignUp" class="input-group uf-input-group input-group-lg mb-3">
+                        <span class="input-group-text">
+                            <FaUser />
+                        </span>
+                        <input type="text" class="form-control" placeholder="Full Name">
+                    </div> -->
                     <div class="input-group uf-input-group input-group-lg mb-3">
-                        <span class="input-group-text "><FaEnvelope /></span>
-                        <input type="text" class="form-control" placeholder="Username or Email address">
+                        <span class="input-group-text">
+                            <FaEnvelope />
+                        </span>
+                        <input type="text" class="form-control" placeholder="Email address">
                     </div>
                     <div class="input-group uf-input-group input-group-lg mb-3">
-                        <!-- <span class="input-group-text fa fa-lock"></span> -->
-                        <span class="input-group-text "><MdPassword /></span>
-                        
+                        <span class="input-group-text">
+                            <MdPassword />
+                        </span>
                         <input type="password" class="form-control" placeholder="Password">
                     </div>
-                    <div class="d-flex mb-3 justify-content-between">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input uf-form-check-input" id="exampleCheck1">
-                            <label class="form-check-label text-white" for="exampleCheck1">Remember Me</label>
-                        </div>
-                        <a href="#">Forgot password?</a>
+                    <div v-if="isSignUp" class="input-group uf-input-group input-group-lg mb-3">
+                        <span class="input-group-text">
+                            <MdPassword />
+                        </span>
+                        <input type="password" class="form-control" placeholder="Confirm Password">
                     </div>
-                    <div class="d-grid mb-4">
-                        <button type="submit" class="btn uf-btn-primary btn-lg">Register</button>
+                    <div v-if="!isSignUp" class="d-flex mb-3 justify-content-between">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input uf-form-check-input" id="rememberMe">
+                            <label class="form-check-label text-white" for="rememberMe">Remember Me</label>
+                        </div>
+                        <a href="/" class="pwdFroget">Forgot password?</a>
+                    </div>
+                    <div class="col-12 d-flex justify-content-center">
+                        <div class="d-grid mb-4">
+                            <button class="btn btn-lg btn-primary" type="submit">{{ isSignUp ? 'Sign Up' : 'Log In' }}</button>
+                        </div>
                     </div>
                     <div class="d-flex mb-3">
                         <div class="dropdown-divider m-auto w-25"></div>
-                        <small class="text-nowrap text-white">Or Sign In with</small>
+                        <small class="text-nowrap text-white">Or {{ isSignUp ? 'sign up' : 'log in' }} with</small>
                         <div class="dropdown-divider m-auto w-25"></div>
                     </div>
-                    <div class="uf-social-login d-flex justify-content-center"> 
-                        <a href="#" class="uf-social-ic" title="Login with Facebook"><MdFacebook/></a>
-                        <a href="#" class="uf-social-ic" title="Login with Google"><FaGooglePlusG /></a>
+                    <div class="uf-social-login d-flex justify-content-center">
+                        <button class="google-btn" href="/">
+                            <img src="https://img.icons8.com/color/48/000000/google-logo.png" alt="Google Logo">
+                            <span class="text-secondary">{{ isSignUp ? 'Sign Up' : 'Continue' }} with Google</span>
+                        </button>
                     </div>
                     <div class="mt-4 text-center">
-                        <span class="text-white">Don't have an account?</span>
-                        <a href="/login"> Sign Up </a>
+                        <span class="text-white">{{ isSignUp ? 'Already have an account? ' : "Don't have an account? " }}</span>
+                        <a class="toggleAuth " @click="toggleAuth()">
+                            <RouterLink to="#">
+                                {{ isSignUp ? 'Log In' : 'Sign Up' }}
+                            </RouterLink>
+                        </a>
                     </div>
                 </form>
             </div>
-        </div>  
+        </div>
     </Section>
-
 </template>
+
 <script>
-import { FaEnvelope , FaGooglePlusG} from 'vue-icons-plus/fa'
-import { MdPassword, MdFacebook } from 'vue-icons-plus/md'
+import { RouterLink } from 'vue-router';
+import { FaEnvelope } from 'vue-icons-plus/fa';
+import { MdPassword } from 'vue-icons-plus/md';
+
 export default {
+    data() {
+        return {
+            isSignUp: true,
+        };
+    },
+    methods: {
+        toggleAuth() {
+            this.isSignUp = !this.isSignUp;
+        },
+    },
     components: {
-        FaEnvelope,FaGooglePlusG,MdFacebook,
-        MdPassword 
-    }
-}
+        FaEnvelope,
+        MdPassword,
+        // FaUser,
+        RouterLink,
+    },
+};
 </script>
 
 <style scoped>
-.login_section {
+.hero-wrap {
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh; 
+     margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+
+/* background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;  
+    margin: 0;
+    padding: 0;
+    overflow: hidden; */
+
+.overlay_auth {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    content: '';
+    opacity: .2;
+    background: #5a3d52;
+}
+
+.auth_section {
     display: flex;
+    justify-content: center;
     align-items: center;
-    background-image: linear-gradient(to right, #242023, #200a15a8);
-    /* background-image: linear-gradient(to right, #ff2ec0, #fa4ea498); */
 }
 
-a {
-    color: #172eff;
-    text-decoration: none;
-}
-
-a:hover {
-    color: #21115a;
-}
-
-.uf-form-signin {
+.uf-form-auth {
     width: 100%;
     max-width: 350px;
     padding: 15px;
@@ -106,40 +163,31 @@ a:hover {
     background: #ffffff;
 }
 
-.uf-btn-primary {
-    background: #842029;
-    color: #fff;
-}
-
-.uf-btn-primary:hover {
-    background: #5a1118;
-    color: #fff;
-}
-
-.uf-form-check-input:checked {
-    background-color: #842029;
-    border-color: #842029;
-}
-
-.uf-social-login .uf-social-ic+.uf-social-ic {
-    margin-left: 15px;
-}
-
-.uf-social-ic {
-    width: 40px;
-    height: 40px;
-    background: #fff;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
+.google-btn {
+    display: inline-flex;
     align-items: center;
+    justify-content: center;
+    padding: 10px 25px;
+    background-color: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.uf-social-ic:hover {
-    background: #842029;
+.google-btn img {
+    width: 30px;
+    margin-right: 10px;
 }
 
-.uf-social-ic:hover i {
-    color: #fff;
+.google-btn:hover {
+    background-color: #f1f1f1;
+}
+
+.pwdFroget, .toggleAuth {
+    text-decoration: underline;
+    color: #343fd1fb;
+    font-weight: bold;
 }
 </style>

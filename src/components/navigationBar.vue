@@ -16,8 +16,8 @@
                     <li class="nav-item"><a href="" class="nav-link">Blog</a></li>
                     <li class="nav-item"><a href="" class="nav-link">Contact</a></li>
                     <li class="nav-item">
-                        <a href="/login" class="nav-link d-flex align-items-center">
-                            <span  href="/login" class="mr-2 ">Login</span> <svg xmlns="http://www.w3.org/2000/svg" width="20"
+                        <a href="/register" class="nav-link d-flex align-items-center">
+                            <span  class="mr-2 ">Login</span> <svg xmlns="http://www.w3.org/2000/svg" width="20"
                                 height="20" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
                                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
                                 <path fill-rule="evenodd"

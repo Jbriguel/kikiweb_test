@@ -28,11 +28,9 @@ export default {
 
 <template>
   <Section>
-<!-- <p>{{url}}</p> -->
+    <!-- <p>{{url}}</p> -->
     <HeroSection backgroundImage="/assets/images/bg_1.jpg" title="Beauty Salon" logoText="Kiki Secret"
       buttonText="View Our Services" creatorLink="#" creatorName="Colorlib.com" />
-
-
 
     <navigationBar />
     <!-- END nav -->
@@ -129,7 +127,7 @@ export default {
             <p>Experience the artistry and passion behind our work through our curated gallery. Each image tells a story
               of creativity, precision, and elegance, reflecting our commitment to excellence.</p>
           </div>
-        </div> 
+        </div>
         <div class="row">
           <div class="col-md-4 ftco-animate">
             <a href="#" class="work-entry">
