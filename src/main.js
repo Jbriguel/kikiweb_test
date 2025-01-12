@@ -12,18 +12,22 @@ import { createPinia } from 'pinia'
 // import 'owl.carousel/dist/assets/owl.carousel.css';
 // import 'owl.carousel/dist/assets/owl.theme.default.css';
 // import 'aos/dist/aos.css';
-// import 'jquery';
+import 'jquery';
 
 import 'aos/dist/aos.css';
 import AOS from 'aos';
 AOS.init();
 
-
-
+import FontAwesomeIcon from "@/assets/js/fontawesome"; // Importez la configuration
+ 
 import App from './App.vue'
 import router from './router'
 
 const app = createApp(App)
+
+// Enregistrez le composant globalement
+app.component('font-awesome-icon', FontAwesomeIcon);
+
 
 // app.provide('bootstrap', bootstrap); 
 app.use(createPinia())
