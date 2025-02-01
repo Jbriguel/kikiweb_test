@@ -22,5 +22,7 @@ import { /*RouterLink,*/ RouterView } from 'vue-router'
 </template>
 
 <style>
- 
+a.btn {
+  pointer-events: auto !important;
+}
 </style>

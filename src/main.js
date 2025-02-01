@@ -12,7 +12,7 @@ import { createPinia } from 'pinia'
 // import 'owl.carousel/dist/assets/owl.carousel.css';
 // import 'owl.carousel/dist/assets/owl.theme.default.css';
 // import 'aos/dist/aos.css';
-import 'jquery';
+// import 'jquery';
 
 import 'aos/dist/aos.css';
 import AOS from 'aos';

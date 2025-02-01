@@ -27,7 +27,7 @@ export default {
 <style></style>
 
 <template>
-  <Section>
+  <section>
     <!-- <p>{{url}}</p> -->
     <HeroSection backgroundImage="/assets/images/bg_1.jpg" title="Beauty Salon" logoText="Kiki Secret"
       buttonText="View Our Services" creatorLink="#" creatorName="Colorlib.com" />
@@ -382,5 +382,5 @@ export default {
     <!-- loader -->
     <!-- <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div> -->
 
-  </Section>
+  </section>
 </template>

@@ -1,38 +1,38 @@
 <template>
-    <Section class="auth_section">
+    <section class="auth_section">
         <div class="hero-wrap js-fullheight" :style="{ backgroundImage: `url('../assets/images/back_07.jpg')` }">
             <div class="overlay_auth"></div>
 
             <div class="uf-form-auth m-8 ">
-                <div class="text-center">
-                    <a href="https://uifresh.net/"><img src="@/assets/images/logo/kiki_logo-2.png" alt="" width="100"
-                            height="100"></a>
+                <div class="col-12 text-center">
+                    <a href="/"><img src="@/assets/images/logo/kiki_logo-2.png" alt="" width="100" height="100"></a>
                     <h1 class="text-white h3">{{ isSignUp ? 'Create Account' : 'Account Login' }}</h1>
                 </div>
                 <form class="mt-4">
-                    <!-- <div v-if="isSignUp" class="input-group uf-input-group input-group-lg mb-3">
+                    <div v-if="isSignUp" class="input-group uf-input-group input-group-lg mb-3">
                         <span class="input-group-text">
                             <FaUser />
                         </span>
-                        <input type="text" class="form-control" placeholder="Full Name">
-                    </div> -->
+                        <input v-model="formData.fullName" type="text" class="form-control" placeholder="Full Name">
+                    </div>
                     <div class="input-group uf-input-group input-group-lg mb-3">
                         <span class="input-group-text">
                             <FaEnvelope />
                         </span>
-                        <input type="text" class="form-control" placeholder="Email address">
+                        <input v-model="formData.email" type="text" class="form-control" placeholder="Email address">
                     </div>
                     <div class="input-group uf-input-group input-group-lg mb-3">
                         <span class="input-group-text">
                             <MdPassword />
                         </span>
-                        <input type="password" class="form-control" placeholder="Password">
+                        <input v-model="formData.password" type="password" class="form-control" placeholder="Password">
                     </div>
                     <div v-if="isSignUp" class="input-group uf-input-group input-group-lg mb-3">
                         <span class="input-group-text">
                             <MdPassword />
                         </span>
-                        <input type="password" class="form-control" placeholder="Confirm Password">
+                        <input v-model="formData.password_confirmation" type="password" class="form-control"
+                            placeholder="Confirm Password">
                     </div>
                     <div v-if="!isSignUp" class="d-flex mb-3 justify-content-between">
                         <div class="form-check">
@@ -43,7 +43,9 @@
                     </div>
                     <div class="col-12 d-flex justify-content-center">
                         <div class="d-grid mb-4">
-                            <button class="btn btn-lg btn-primary" type="submit">{{ isSignUp ? 'Sign Up' : 'Log In' }}</button>
+                            <button class="btn btn-lg btn-primary" type="submit" @click.prevent="handleAuth">{{ isSignUp
+                                ? 'Sign Up' : 'Log In'
+                                }}</button>
                         </div>
                     </div>
                     <div class="d-flex mb-3">
@@ -57,41 +59,90 @@
                             <span class="text-secondary">{{ isSignUp ? 'Sign Up' : 'Continue' }} with Google</span>
                         </button>
                     </div>
-                    <div class="mt-4 text-center">
-                        <span class="text-white">{{ isSignUp ? 'Already have an account? ' : "Don't have an account? " }}</span>
-                        <a class="toggleAuth " @click="toggleAuth()">
-                            <RouterLink to="#">
-                                {{ isSignUp ? 'Log In' : 'Sign Up' }}
-                            </RouterLink>
-                        </a>
+                    <div class="col-12 d-flex justify-content-center mt-4 text-center">
+                        <span class="text-white">
+                            {{ isSignUp ? 'Already have an account? ' : "Don't have an account? " }}
+                        </span>
+                        <span class="toggleAuth" @click="toggleAuth">
+                            {{ isSignUp ? ' Log In' : ' Sign Up' }}
+                        </span>
                     </div>
                 </form>
             </div>
         </div>
-    </Section>
+    </section>
 </template>
 
 <script>
-import { RouterLink } from 'vue-router';
-import { FaEnvelope } from 'vue-icons-plus/fa';
+// import { RouterLink } from 'vue-router';
+import { ref } from 'vue';
+import { FaEnvelope, FaUser } from 'vue-icons-plus/fa';
 import { MdPassword } from 'vue-icons-plus/md';
 
+import { useAuthStore } from '@/stores/auth'; // Importez votre store Pinia
+
 export default {
+    setup() {
+        const authStore = useAuthStore(); // Initialisez le store
+        let isSignUp = ref(true);
+
+        const formData = ref({
+            fullName: '',
+            email: '',
+            password: '',
+            password_confirmation: '',
+        });
+
+        const toggleAuth = () => {
+            console.log("Avant basculement :", isSignUp.value);
+            isSignUp.value = !isSignUp.value;
+            console.log("Après basculement :", isSignUp.value);
+        };
+        const handleAuth = async () => {
+            if (isSignUp.value && formData.value.password !== formData.value.password_confirmation) {
+                alert('Les mots de passe ne correspondent pas.');
+                return;
+            }
+
+            if (!formData.value.email || !formData.value.password) {
+                alert('Veuillez remplir tous les champs obligatoires.');
+                return;
+            }
+            try {
+                if (isSignUp.value) {
+                    // Inscription
+                    await authStore.register(formData.value);
+                    alert('Inscription réussie !');
+                } else {
+                    // Connexion
+                    await authStore.login({
+                        email: formData.value.email,
+                        password: formData.value.password,
+                    });
+                    alert('Connexion réussie !');
+                }
+            } catch (error) {
+                alert('Erreur : ' + error.message);
+            }
+        };
+
+        return { isSignUp, toggleAuth, formData, handleAuth };
+    },
     data() {
         return {
-            isSignUp: true,
+            // isSignUp: true,
         };
     },
     methods: {
-        toggleAuth() {
-            this.isSignUp = !this.isSignUp;
-        },
+        clickTest(report) {
+            console.log('click received', report);
+        }
     },
     components: {
         FaEnvelope,
         MdPassword,
-        // FaUser,
-        RouterLink,
+        FaUser,
+        // RouterLink,
     },
 };
 </script>
@@ -102,8 +153,8 @@ export default {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    height: 100vh; 
-     margin: 0;
+    height: 100vh;
+    margin: 0;
     padding: 0;
     position: relative;
 }
@@ -185,9 +236,11 @@ export default {
     background-color: #f1f1f1;
 }
 
-.pwdFroget, .toggleAuth {
+.pwdFroget,
+.toggleAuth {
     text-decoration: underline;
-    color: #343fd1fb;
+    color: #d1348afb;
+    /* color: #343fd1fb; */
     font-weight: bold;
 }
 </style>
