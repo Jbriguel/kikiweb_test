@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <!-- Filter Buttons Section -->
+        <!-- Filter Buttons section -->
         <div class="row mt-5" id="filter-buttons">
             <div class="col-12">
                 <button v-for="filter in filters" :key="filter.name"
@@ -11,7 +11,7 @@
             </div>
         </div>
 
-        <!-- Filterable Cards Section -->
+        <!-- Filterable Cards section -->
         <div class="row px-2 mt-4 gap-3" id="filterable-cards">
             <!-- <div v-for="card in filteredCards" :key="card.id" class="card p-0" :data-name="card.category">
                 <img :src="card.image" :alt="card.title">
