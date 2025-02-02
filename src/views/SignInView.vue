@@ -8,6 +8,10 @@
                     <a href="/"><img src="@/assets/images/logo/kiki_logo-2.png" alt="" width="100" height="100"></a>
                     <h1 class="text-white h3">{{ isSignUp ? 'Create Account' : 'Account Login' }}</h1>
                 </div>
+                <!-- Afficher les erreurs -->
+                <div v-if="errors.length > 0" class="error-messages">
+                    <p v-for="(error, index) in errors" :key="index">{{ error }}</p>
+                </div>
                 <form class="mt-4">
                     <div v-if="isSignUp" class="input-group uf-input-group input-group-lg mb-3">
                         <span class="input-group-text">
@@ -46,6 +50,11 @@
                             <button class="btn btn-lg btn-primary" type="submit" @click.prevent="handleAuth">{{ isSignUp
                                 ? 'Sign Up' : 'Log In'
                                 }}</button>
+
+                            <!-- <b-button variant="primary" disabled>
+                                <b-spinner small type="grow"></b-spinner>
+                                Loading...
+                            </b-button> -->
                         </div>
                     </div>
                     <div class="d-flex mb-3">
@@ -68,9 +77,36 @@
                         </span>
                     </div>
                 </form>
+                <!-- Trigger the modal with a button -->
+                <div class="col-12 d-flex justify-content-center mt-4 text-center">
+                    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open
+                        Modal</button>
+                </div>
+
             </div>
         </div>
     </section>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Modal Header</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Some text in the modal.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </template>
 
 <script>
@@ -86,6 +122,8 @@ export default {
         const authStore = useAuthStore(); // Initialisez le store
         let isSignUp = ref(true);
 
+        const errors = ref([]); // Stocker les erreurs
+
         const formData = ref({
             fullName: '',
             email: '',
@@ -98,7 +136,21 @@ export default {
             isSignUp.value = !isSignUp.value;
             console.log("Après basculement :", isSignUp.value);
         };
+        const validatePassword = (password) => {
+            const errors = [];
+            if (password.length < 8) {
+                errors.push('Le mot de passe doit contenir au moins 8 caractères.');
+            }
+            if (!/[A-Z]/.test(password)) {
+                errors.push('Le mot de passe doit contenir au moins une majuscule.');
+            }
+            if (!/[a-z]/.test(password)) {
+                errors.push('Le mot de passe doit contenir au moins une minuscule.');
+            }
+            return errors;
+        };
         const handleAuth = async () => {
+            errors.value = []; // Réinitialiser les erreurs
             if (isSignUp.value && formData.value.password !== formData.value.password_confirmation) {
                 alert('Les mots de passe ne correspondent pas.');
                 return;
@@ -108,6 +160,12 @@ export default {
                 alert('Veuillez remplir tous les champs obligatoires.');
                 return;
             }
+            // Validation côté client
+            // const passwordErrors = validatePassword(formData.value.password);
+            // if (passwordErrors.length > 0) {
+            //     errors.value.push(...passwordErrors);
+            //     return;
+            // }
             try {
                 if (isSignUp.value) {
                     // Inscription
@@ -122,11 +180,25 @@ export default {
                     alert('Connexion réussie !');
                 }
             } catch (error) {
-                alert('Erreur : ' + error.message);
+                console.log('error =>', error);
+                console.log('error.response =>', JSON.stringify(error));
+                if (error.response) {
+                    const { message, errors: serverErrors } = error.response.data;
+
+                    // Ajouter le message général aux erreurs
+                    errors.value.push(message);
+
+                    // Ajouter les erreurs détaillées
+                    if (serverErrors && serverErrors.length > 0) {
+                        errors.value.push(...serverErrors);
+                    }
+                } else {
+                    errors.value.push('Erreur réseau ou de configuration : ' + error.message);
+                }
             }
         };
 
-        return { isSignUp, toggleAuth, formData, handleAuth };
+        return { isSignUp, errors, toggleAuth, formData, handleAuth };
     },
     data() {
         return {
@@ -148,6 +220,11 @@ export default {
 </script>
 
 <style scoped>
+.error-messages {
+    color: red;
+    margin-top: 10px;
+}
+
 .hero-wrap {
     background-attachment: fixed;
     background-size: cover;
