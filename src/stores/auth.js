@@ -21,7 +21,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         const response = await axios.post(
           `${this.host}/api/${this.prefix}/auth/register`,
-          userData,
+          JSON.stringify(userData),
           {
             headers: {
               'Content-Type': 'application/json',
@@ -31,29 +31,32 @@ export const useAuthStore = defineStore('auth', {
           },
         )
         this.token = response.data.data.token
+        // this.token = response.data.token
         return response.data
       } catch (error) {
-        throw error.response.data
+        console.log('error', error)
+        console.log('error.response', JSON.stringify(error.response))
+        throw error
       }
     },
 
     async login(credentials) {
       try {
-        const response = await axios
-          .post(`${this.host}/api/${this.prefix}/auth/login`, JSON.stringify(credentials), {
+        const response = await axios.post(
+          `${this.host}/api/${this.prefix}/auth/login`,
+          JSON.stringify(credentials),
+          {
             headers: {
               'Content-Type': 'application/json',
               Accept: 'application/json',
             },
-          })
-          // .catch((error) => {
-          //   console.log('error -->', error) 
-          //   console.log('error.response -->', JSON.stringify(error.response))
-          // })
+          },
+        )
+
         this.token = response.data.token
         return response.data
       } catch (error) {
-        console.log('error', error) 
+        console.log('error', error)
         console.log('error.response', JSON.stringify(error.response))
         throw error
       }

@@ -2,6 +2,8 @@ import './assets/main.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { createVfm } from 'vue-final-modal'
+import 'vue-final-modal/style.css'
 
 // import * as bootstrap from 'bootstrap/dist/js/bootstrap.bundle';
 
@@ -27,7 +29,7 @@ const app = createApp(App)
 
 // Enregistrez le composant globalement
 app.component('font-awesome-icon', FontAwesomeIcon);
-
+app.use(createVfm())
 
 // app.provide('bootstrap', bootstrap); 
 app.use(createPinia())
