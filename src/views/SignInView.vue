@@ -3,11 +3,29 @@
     <div class="hero-wrap" :style="{ backgroundImage: `url('../assets/images/back_07.jpg')` }">
       <div class="overlay_auth"></div>
 
+      <!-- Afficher les erreurs en haut -->
+      <Alert
+        v-if="errors.length > 0"
+        type="error"
+        :message="errorsToMessage(errors)"
+        position="top"
+        :duration="10000"
+        @close="clearErrors"
+      />
+
+      <!-- Afficher un message de succès en bas -->
+      <Alert
+        v-if="successMessage"
+        type="success"
+        :message="successMessage"
+        :duration="5000"
+        position="bottom"
+        @close="successMessage = ''"
+      />
+
       <div class="uf-form-auth m-2">
         <div class="col-12 text-center">
-          <a href="/"
-            ><img src="@/assets/images/logo/kiki_logo-2.png" alt="" width="100" height="100"
-          /></a>
+          <a href="/"><img src="@/assets/images/logo/kiki_logo-2.png" alt="" height="50" /></a>
           <h1 class="text-white h3">{{ isSignUp ? 'Create Account' : 'Account Login' }}</h1>
         </div>
         <!-- Afficher les erreurs -->
@@ -20,7 +38,7 @@
               <FaUser />
             </span>
             <input
-              v-model="formData.firstName"
+              v-model="formData.firstname"
               type="text"
               class="form-control"
               placeholder="First Name"
@@ -31,7 +49,7 @@
               <FaUser />
             </span>
             <input
-              v-model="formData.lastName"
+              v-model="formData.lastname"
               type="text"
               class="form-control"
               placeholder="Last Name"
@@ -43,9 +61,22 @@
             </span>
             <input
               v-model="formData.email"
-              type="text"
+              type="email"
               class="form-control"
               placeholder="Email address"
+            />
+          </div>
+          <div class="input-group uf-input-group input-group-lg mb-3">
+            <span class="input-group-text">
+              <FaPhoneAlt />
+            </span>
+            <input
+              v-model="formData.phone"
+              type="phone"
+              class="form-control"
+              placeholder="Phone Number"
+              @input="formatPhoneNumber"
+              maxlength="12"
             />
           </div>
           <div class="input-group uf-input-group input-group-lg mb-3">
@@ -129,24 +160,14 @@
   </section>
 
   <!-- Modal -->
-  <div class="h-screen flex items-center justify-center">
-    <!-- Utilisation du composant Modal -->
-    <!-- <Modal
-      :isOpen="isModalOpen"
-      title="Confirmation"
-      content="Êtes-vous sûr de vouloir continuer ?"
-      confirmText="Oui"
-      cancelText="Non"
-      @close="closeModal"
-      @confirm="handleConfirm"
-    /> -->
+  <!-- <div class="h-screen flex items-center justify-center"> 
     <CustomModal
       :title="'an error occurred!'"
       :content="errorsToMessage(errors)"
       :isOpen="isModalOpen"
       @close="closeModal"
     />
-  </div>
+  </div> -->
 
   <!-- <div>
    
@@ -157,7 +178,7 @@
 <script>
 // import { RouterLink } from 'vue-router';
 import { ref } from 'vue'
-import { FaEnvelope, FaUser } from 'vue-icons-plus/fa'
+import { FaEnvelope, FaUser, FaPhoneAlt } from 'vue-icons-plus/fa'
 import { MdPassword } from 'vue-icons-plus/md'
 import { VueFinalModal } from 'vue-final-modal'
 import { useAuthStore } from '@/stores/auth' // Importez votre store Pinia
@@ -165,6 +186,8 @@ import { ModalsContainer } from 'vue-final-modal'
 import MyModalPreview from '../components/modals/modalPreview.vue'
 import Modal from '../components/modals/Modal.vue'
 import CustomModal from '../components/modals/custom_modal.vue'
+import Alert from '../components/modals/alert.vue'
+import router from '@/router'
 export default {
   setup() {
     const authStore = useAuthStore() // Initialisez le store
@@ -172,10 +195,11 @@ export default {
     let isLoading = ref(false)
     const isModalOpen = ref(false)
     const errors = ref([]) // Stocker les erreurs
+    const successMessage = ref('')
 
     const formData = ref({
-      firstName: '',
-      lastName: '',
+      firstname: '',
+      lastname: '',
       phone: '',
       email: '',
       password: '',
@@ -208,6 +232,11 @@ export default {
       })
       return message
     }
+
+    const clearErrors = () => {
+      errors.value = []
+    }
+
     const handleAuth = async () => {
       errors.value = [] // Réinitialiser les erreurs
       if (isSignUp.value && formData.value.password !== formData.value.password_confirmation) {
@@ -230,17 +259,20 @@ export default {
         if (isSignUp.value) {
           // Inscription
           await authStore.register(formData.value)
-          alert('Inscription réussie !')
+          toggleAuth()
+          successMessage.value = 'Inscription réussie !';
         } else {
           // Connexion
           await authStore.login({
             email: formData.value.email,
             password: formData.value.password,
           })
-          alert('Connexion réussie !')
+          successMessage.value ='Connexion réussie !';
+          // router.go({name: 'home'})
         }
       } catch (error) {
         isModalOpen.value = true
+        console.log('formData =>', formData.value)
         console.log('error =>', error)
         console.log('error.response =>', JSON.stringify(error))
         if (error.response) {
@@ -265,7 +297,9 @@ export default {
       isLoading,
       isSignUp,
       errorsToMessage,
+      successMessage,
       errors,
+      clearErrors,
       isModalOpen,
       toggleAuth,
       formData,
@@ -293,8 +327,32 @@ export default {
       alert('Action confirmée !')
       this.closeModal()
     },
+    formatPhoneNumber(event) {
+      // Récupérer la valeur saisie
+      let input = event.target.value
+
+      // Supprimer tous les caractères non numériques
+      let cleaned = input.replace(/\D/g, '')
+
+      // Appliquer le format souhaité : 972-476-2747
+      let formatted = ''
+      if (cleaned.length > 0) {
+        formatted += cleaned.substring(0, 3) // Les 3 premiers chiffres
+      }
+      if (cleaned.length > 3) {
+        formatted += '-' + cleaned.substring(3, 6) // Les 3 chiffres suivants
+      }
+      if (cleaned.length > 6) {
+        formatted += '-' + cleaned.substring(6, 10) // Les 4 derniers chiffres
+      }
+
+      // Mettre à jour la valeur du champ
+      this.formData.phone = formatted
+    },
   },
   components: {
+    Alert,
+    FaPhoneAlt,
     FaEnvelope,
     MdPassword,
     Modal,
@@ -312,8 +370,8 @@ export default {
   background: white;
   padding: 20px;
   border-radius: 8px;
-  max-width: 500px;
-  margin: 0 auto;
+  max-width: 700px;
+  margin: 5 auto;
 }
 
 .error-messages {
@@ -344,12 +402,6 @@ export default {
   justify-content: center;
 }
 
-@media (max-width: 768px) {
-  .hero-wrap {
-    background-attachment: scroll;
-  }
-}
-
 .overlay_auth {
   position: absolute;
   top: 0;
@@ -367,6 +419,35 @@ export default {
   padding: 1rem 4rem;
   border-radius: 10px;
   backdrop-filter: blur(10px); /* Effet flou sur le fond */
+  width: 100%; /* Par défaut, prend toute la largeur disponible */
+  max-width: 500px; /* Largeur maximale sur les grands écrans */
+  margin: 0 auto; /* Centrer le formulaire */
+}
+
+/* Pour les petits écrans (moins de 768px) */
+@media (max-width: 768px) {
+  .uf-form-auth {
+    max-width: 100%; /* Pas de limite de largeur maximale */
+    min-width: 300px; /* Largeur minimale pour les petits écrans */
+    padding: 1rem 2rem; /* Réduire le padding sur les petits écrans */
+  }
+}
+
+/* Pour les très petits écrans (moins de 480px) */
+@media (max-width: 480px) {
+  .uf-form-auth {
+    min-width: 250px; /* Largeur minimale encore plus petite */
+    padding: 1rem; /* Encore moins de padding */
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-wrap {
+    background-attachment: scroll;
+  }
+  .uf-form-auth {
+    padding: 1rem 1rem; /* Padding de 1rem sur tous les côtés */
+  }
 }
 
 /* 

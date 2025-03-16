@@ -1,6 +1,8 @@
 // stores/auth.js
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import {User} from '../services/models/user'
+import router from '@/router'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -32,6 +34,7 @@ export const useAuthStore = defineStore('auth', {
         )
         this.token = response.data.data.token
         // this.token = response.data.token
+        this.user = User.fromMap(response.data.data.user);
         return response.data
       } catch (error) {
         console.log('error', error)
@@ -54,6 +57,11 @@ export const useAuthStore = defineStore('auth', {
         )
 
         this.token = response.data.token
+        console.log('data', response.data)
+        console.log('user', response.data['data']["user"])
+        this.user = User.fromMap(response.data['data']["user"]);
+         // Rediriger vers la page d'accueil après une connexion réussie
+         router.push({ name: 'home' });
         return response.data
       } catch (error) {
         console.log('error', error)
@@ -108,6 +116,8 @@ export const useAuthStore = defineStore('auth', {
         )
         this.token = null
         this.user = null
+        // Rediriger vers la page de connexion après une déconnexion
+        router.push({ name: 'login' });
         return response.data
       } catch (error) {
         throw error.response.data
@@ -126,7 +136,8 @@ export const useAuthStore = defineStore('auth', {
             },
           },
         )
-        this.user = response.data.data
+        // this.user = response.data.data
+        this.user = User.fromMap(response.data.data);
         return response.data
       } catch (error) {
         throw error.response.data
