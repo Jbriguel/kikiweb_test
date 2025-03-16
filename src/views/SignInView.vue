@@ -1,12 +1,9 @@
 <template>
   <section class="auth_section">
-    <div
-      class="hero-wrap js-fullheight"
-      :style="{ backgroundImage: `url('../assets/images/back_07.jpg')` }"
-    >
+    <div class="hero-wrap" :style="{ backgroundImage: `url('../assets/images/back_07.jpg')` }">
       <div class="overlay_auth"></div>
 
-      <div class="uf-form-auth m-8">
+      <div class="uf-form-auth m-2">
         <div class="col-12 text-center">
           <a href="/"
             ><img src="@/assets/images/logo/kiki_logo-2.png" alt="" width="100" height="100"
@@ -179,6 +176,7 @@ export default {
     const formData = ref({
       firstName: '',
       lastName: '',
+      phone: '',
       email: '',
       password: '',
       password_confirmation: '',
@@ -217,10 +215,10 @@ export default {
         return
       }
 
-    //   if (!formData.value.email || !formData.value.password) {
-    //     alert('Veuillez remplir tous les champs obligatoires.')
-    //     return
-    //   }
+      //   if (!formData.value.email || !formData.value.password) {
+      //     alert('Veuillez remplir tous les champs obligatoires.')
+      //     return
+      //   }
       // Validation côté client
       // const passwordErrors = validatePassword(formData.value.password);
       // if (passwordErrors.length > 0) {
@@ -323,28 +321,76 @@ export default {
   margin-top: 10px;
 }
 
+.auth_section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.hero-wrap {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  min-height: 100vh;
+  height: auto;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* Garde l'image fixe au scroll */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .hero-wrap {
+    background-attachment: scroll;
+  }
+}
+
+.overlay_auth {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3); /* Ajuste l’opacité si nécessaire */
+  z-index: 1; /* Assure que l'overlay est au-dessus du background */
+}
+
+.uf-form-auth {
+  position: relative;
+  z-index: 2; /* Pour que le formulaire soit au-dessus de l'overlay */
+  background: rgba(255, 255, 255, 0.1); /* Fond semi-transparent */
+  padding: 1rem 4rem;
+  border-radius: 10px;
+  backdrop-filter: blur(10px); /* Effet flou sur le fond */
+}
+
+/* 
 .hero-wrap {
   background-attachment: fixed;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  height: 100vh;
+  min-height: 100vh; 
+  height: auto;  
+  width: 100%;
   margin: 0;
   padding: 0;
   position: relative;
 }
 
-/* background-attachment: fixed;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    min-height: 100vh;  
-    margin: 0;
-    padding: 0;
-    overflow: hidden; */
+@media (max-width: 768px) {
+  .hero-wrap {
+    background-attachment: scroll;
+  }
+} 
 
 .overlay_auth {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -354,18 +400,17 @@ export default {
   background: #5a3d52;
 }
 
-.auth_section {
+  .auth_section {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
+}  
 .uf-form-auth {
   width: 100%;
   max-width: 350px;
   padding: 15px;
   margin: auto;
-}
+} */
 
 .uf-input-group .input-group-text {
   background: #ffffff70;
