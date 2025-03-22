@@ -1,15 +1,19 @@
 // stores/auth.js
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import {User} from '../services/models/user'
+import { User } from '../services/models/user'
 import router from '@/router'
+import Cookies from 'js-cookie' // Importer js-cookie
+// stores/authStore.js
+import { useServicesStore } from './servicesStore'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     host: 'https://kikicrm.empireebusiness.com',
     prefix: 'mobile_app',
-    token: null,
-    user: null,
+    token: Cookies.get('token'), //|| null, // Récupérer le token depuis les cookies
+    user: Cookies.get('user') != null ? User.fromMap(JSON.parse(Cookies.get('user'))) : null, // Récupérer l'utilisateur depuis les cookies
+    userInCookies:  Cookies.get('user') != null ? JSON.parse(Cookies.get('user')) : null,
   }),
   actions: {
     /**
@@ -34,7 +38,12 @@ export const useAuthStore = defineStore('auth', {
         )
         this.token = response.data.data.token
         // this.token = response.data.token
-        this.user = User.fromMap(response.data.data.user);
+        this.user = User.fromMap(response.data.data.user)
+        // Stocker le token et l'utilisateur dans les cookies
+        Cookies.set('token', this.token, { expires: 7 }) // Expire dans 7 jours
+        Cookies.set('user', JSON.stringify(this.user.toMap()), { expires: 7 })
+        // Rediriger vers la page de connexion après une inscription réussie
+        router.push({ name: 'login' })
         return response.data
       } catch (error) {
         console.log('error', error)
@@ -56,12 +65,15 @@ export const useAuthStore = defineStore('auth', {
           },
         )
 
-        this.token = response.data.token
+        this.token = response.data['data']['token']
+        this.user = User.fromMap(response.data['data']['user'])
         console.log('data', response.data)
-        console.log('user', response.data['data']["user"])
-        this.user = User.fromMap(response.data['data']["user"]);
-         // Rediriger vers la page d'accueil après une connexion réussie
-         router.push({ name: 'home' });
+        console.log('user', this.user)
+        // Stocker le token et l'utilisateur dans les cookies
+        Cookies.set('token', this.token, { expires: 7 }) // Expire dans 7 jours
+        Cookies.set('user', JSON.stringify(this.user.toMap()), { expires: 7 })
+        // Rediriger vers la page d'accueil après une connexion réussie
+        router.push({ name: 'home' })
         return response.data
       } catch (error) {
         console.log('error', error)
@@ -104,7 +116,7 @@ export const useAuthStore = defineStore('auth', {
 
     async logout() {
       try {
-        const response = await axios.post(
+        /*const response = await axios.post(
           `${this.host}/${this.prefix}/user/logout`,
           {},
           {
@@ -113,12 +125,20 @@ export const useAuthStore = defineStore('auth', {
               Authorization: `Bearer ${this.token}`,
             },
           },
-        )
+        )*/
+        // Ajouter une action pour déconnecter l'utilisateur et supprimer les cookies
+
         this.token = null
         this.user = null
+        Cookies.remove('token')
+        Cookies.remove('user')
+
+        // Vider le cache des services
+        const servicesStore = useServicesStore()
+        servicesStore.clearCache()
         // Rediriger vers la page de connexion après une déconnexion
-        router.push({ name: 'login' });
-        return response.data
+        router.push({ name: 'login' })
+        //return response.data
       } catch (error) {
         throw error.response.data
       }
@@ -137,7 +157,7 @@ export const useAuthStore = defineStore('auth', {
           },
         )
         // this.user = response.data.data
-        this.user = User.fromMap(response.data.data);
+        this.user = User.fromMap(response.data['data']['user'])
         return response.data
       } catch (error) {
         throw error.response.data

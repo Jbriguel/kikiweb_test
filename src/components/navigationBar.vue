@@ -4,7 +4,7 @@
     id="ftco-navbar"
   >
     <div class="container">
-      <a class="navbar-brand" href="index.html">KIKI SECRET</a>
+      <a class="navbar-brand" href="/">KIKI SECRET</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -19,12 +19,12 @@
 
       <div class="collapse navbar-collapse" id="ftco-nav">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item active"><a href="index.html" class="nav-link">Home</a></li>
-          <li class="nav-item"><a href="" class="nav-link">About</a></li>
-          <li class="nav-item"><a href="" class="nav-link">Services</a></li>
-          <li class="nav-item"><a href="" class="nav-link">Work</a></li>
-          <li class="nav-item"><a href="" class="nav-link">Blog</a></li>
-          <li class="nav-item"><a href="" class="nav-link">Contact</a></li>
+          <li class="nav-item active"><a href="/" class="nav-link">Home</a></li>
+          <li class="nav-item"><a href="/" class="nav-link">About</a></li>
+          <li class="nav-item"><a href="/" class="nav-link">Services</a></li>
+          <li class="nav-item"><a href="/#works" class="nav-link">Work</a></li>
+          <!-- <li class="nav-item"><a href="" class="nav-link">Blog</a></li> -->
+          <li class="nav-item"><a href="/#contact" class="nav-link">Contact</a></li>
           <li class="nav-item">
             <!-- <a href="/register" class="nav-link d-flex align-items-center">
                             <span  class="mr-2 ">Login</span> <svg xmlns="http://www.w3.org/2000/svg" width="20"
@@ -52,10 +52,24 @@
                 />
               </svg>
             </a>
-            <div v-else class="nav-link d-flex align-items-center">
-              <span class="mr-2">{{ user.firstname }} {{ user.lastname }}</span>
-              <button @click="logout" class="btn btn-link p-0">
-                <svg
+            <a v-else class="nav-link d-flex align-items-center">
+              <span class="mr-2">{{ user.firstname || '' }}</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                fill="currentColor"
+                class="bi bi-person-circle"
+                viewBox="0 0 16 16"
+              >
+                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                <path
+                  fill-rule="evenodd"
+                  d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"
+                />
+              </svg>
+              <!-- <button @click="logout" class="btn btn-link p-0"> -->
+              <!-- <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
                   height="20"
@@ -71,9 +85,14 @@
                     fill-rule="evenodd"
                     d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"
                   />
-                </svg>
+                </svg> -->
+              <!-- </button> -->
+            </a>
+            <!-- <a class="nav-link d-flex align-items-center">
+              <button class="btn btn-lg btn-primary" type="submit" @click.prevent="handleAuth">
+                {{ isSignUp ? 'Sign Up' : 'Log In' }}
               </button>
-            </div>
+            </a> -->
           </li>
         </ul>
         <!-- <ul class="navbar-nav ms-auto d-none d-lg-inline-flex">
@@ -105,8 +124,9 @@
 </template>
 
 <script>
+// import User from '@/services/models/user'
 import { useAuthStore } from '../stores/auth'
-import { computed } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router' // Importez useRouter pour la redirection
 
 export default {
@@ -114,17 +134,21 @@ export default {
     const authStore = useAuthStore()
     const router = useRouter()
 
-    const isAuthenticated = computed(() => !authStore.token)
+    const isAuthenticated = computed(() => (authStore.token != null ? true : false))
     const user = computed(() => authStore.user)
+    const token = computed(() => authStore.token)
+    const userInCookies = computed(() => authStore.userInCookies)
 
     const logout = async () => {
       await authStore.logout() // Appelez la méthode logout du store
-      router.push({ name: 'Login' }) // Redirigez vers la page de connexion
+      router.push({ name: 'register' }) // Redirigez vers la page de connexion
     }
 
     return {
       isAuthenticated,
       user,
+      userInCookies,
+      token,
       logout,
     }
   },
