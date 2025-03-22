@@ -8,13 +8,13 @@
       <button
         class="navbar-toggler"
         type="button"
-        data-toggle="collapse"
-        data-target="#ftco-nav"
+        data-bs-toggle="collapse"
+        data-bs-target="#ftco-nav"
         aria-controls="ftco-nav"
         aria-expanded="false"
         aria-label="Toggle navigation"
       >
-        <span class="oi oi-menu"></span> Menu
+        <span class="navbar-toggler-icon" :style="{ color: '' }"></span>Menu <!-- Icône du bouton de bascule -->
       </button>
 
       <div class="collapse navbar-collapse" id="ftco-nav">
@@ -154,7 +154,21 @@ export default {
   },
 }
 </script>
-
+ 
 <style scoped>
-/* Vos styles CSS ici */
+ .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 0.8)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+/* Styles pour les petits écrans */
+@media (max-width: 992px) {
+  .navbar-collapse {
+    background-color: #343a40; /* Arrière-plan du menu déroulant */
+    padding: 1rem;
+    border-radius: 0.25rem;
+  }
+
+  .nav-item {
+    margin: 0.5rem 0;
+  }
+}
 </style>

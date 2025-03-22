@@ -25,10 +25,26 @@
         <ShimmerComponent :style="{ width: '200px' }" />
       </div>
     </div> -->
+     <!-- Filterable Cards section -->
+         <div class="card-grid px-2 mt-4 gap-2 ftco-animate" id="filterable-cards">
+          <div v-for="card in filteredCards" :key="card.id" class="card" :data-name="card.category">
+            <img :src="card.image" :alt="card.title" class="card-img" />
+            <div class="card-body">
+              <h6 class="card-title text-primary">{{ card.title }}</h6>
+              <p class="fs-6">{{ card.description }}</p>
+              <div class="mb-0 d-flex justify-content-between">
+                <h6>{{ card.price }} $</h6>
+                <button class="btn btn-primary" @click="redirectToBookingVue(card)">
+                  Book Now
+                </button>
+              </div>
+            </div>
+          </div>
+        </div> 
     <!-- Filterable Cards section -->
-    <div class="row px-2 mt-4 gap-2 ftco-animate" id="filterable-cards">
+    <!-- <div class="row px-2 mt-4 gap-2 ftco-animate" id="filterable-cards">
       <div v-for="card in filteredCards" :key="card.id" class="card p-0" :data-name="card.category">
-        <div class="card">
+         <div class="card">
           <img
             :src="card.image"
             :alt="card.title"
@@ -42,9 +58,10 @@
               <button class="btn btn-primary" @click="redirectToBookingVue(card)">Book Now</button>
             </div>
           </div>
-        </div>
+        </div> 
+       
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -179,24 +196,78 @@ export default {
   background: #6c757d;
 }
 
-#filterable-cards .card {
-  width: 15rem;
+/* Grille pour les cartes */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(250px, 1fr)
+  ); /* Cartes de 250px de large minimum */
+  gap: 16px; /* Espacement entre les cartes */
+}
+
+/* Styles pour les cartes */
+.card {
   border: 2px solid transparent;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
-#filterable-cards .card.hide {
-  display: none;
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-@media (max-width: 600px) {
-  #filterable-cards {
-    justify-content: center;
+.card-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 16px;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.card-body p {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.card-body h6 {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Styles pour les petits écrans */
+@media (max-width: 768px) {
+  .card-grid {
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(200px, 1fr)
+    ); /* Cartes de 200px de large minimum */
+  }
+}
+
+@media (max-width: 480px) {
+  .card-grid {
+    grid-template-columns: 1fr; /* Une seule colonne sur les très petits écrans */
   }
 
-  #filterable-cards .card {
-    width: calc(100% / 2 - 10px);
+  .card {
+    width: 100%; /* Pleine largeur */
   }
 }
-
-/*  */
 </style>
